@@ -6,14 +6,18 @@
   <style>
     body {
       background-color: #000;
-      color: #00cc66; /* darker green */
+      color: #33ff66; /* slightly brighter for contrast */
       font-family: 'Courier New', Courier, monospace;
       padding: 2rem;
+      font-size: 1.1rem;
+      line-height: 1.6;
     }
 
     h1, h2 {
       text-align: center;
-      color: #00cc66;
+      color: #33ff66;
+      margin-bottom: 1rem;
+      letter-spacing: 0.05em;
     }
 
     .zone {
@@ -24,33 +28,53 @@
       width: 100%;
       border-collapse: collapse;
       margin-top: 1rem;
+      font-size: 1rem;
     }
 
     th, td {
-      border: 1px solid #006633;
-      padding: 0.5rem;
+      border: 1px solid #007744;
+      padding: 0.75rem;
       text-align: center;
-      color: #00cc66;
     }
 
     th {
+      background-color: #002b14;
+      font-weight: bold;
+      color: #66ff99;
+    }
+
+    tr:nth-child(even) {
       background-color: #001a0d;
     }
 
     .error {
-      color: #ff4d4d;
+      color: #ff6666;
       font-weight: bold;
+      margin-top: 1rem;
     }
 
     .note {
       font-style: italic;
-      margin-top: 0.5rem;
-      color: #339966;
+      margin-top: 0.75rem;
+      color: #88ffbb;
+      text-align: right;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        font-size: 1rem;
+        padding: 1rem;
+      }
+
+      th, td {
+        padding: 0.5rem;
+      }
     }
   </style>
 </head>
 <body>
-  <h1>AMPERON PEAK PREDICTION VIEWER (7 DAY ROLLING)</h1>
+  <h1>AMPERON PEAK PREDICTION VIEWER</h1>
+  <h2>7 DAY ROLLING FORECAST</h2>
   <div id="output"></div>
 
   <script>
