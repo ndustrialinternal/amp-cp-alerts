@@ -54,15 +54,21 @@
   </label>
 
   <script>
-    const endpoints = [
-      { label: "ERCOT 4CP", path: "ercot_4cp" },
-      { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
-      { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
-      { label: "PJM PPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PPL" },
-      { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
-      { label: "PJM PSEG", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PSEG" },
-      { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
-    ];
+  const endpoints = [
+  { label: "ERCOT 4CP", path: "ercot_4cp" },
+  { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
+
+  // PJM zones in alphabetical order
+  { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
+  { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
+  { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
+  { label: "PJM COMED", path: "pjm_5cp_nits", zoneId: "PJM_LZ_COMED" },
+  { label: "PJM DPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_DPL" },
+  { label: "PJM PECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PECO" },
+  { label: "PJM PPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PPL" },
+  { label: "PJM PSEG", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PSEG" }
+];
+
 
     const themes = [
       `body{background:#000;color:#33ff66;font-family:'Courier New',Courier,monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
