@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Amperon Predictions</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f9f9f9;
+    }
+    h1 {
+      text-align: center;
+    }
+    .zone {
+      margin-bottom: 2rem;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 0.5rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.5rem;
+      text-align: center;
+    }
+    th {
+      background-color: #eaeaea;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    .note {
+      font-style: italic;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Amperon Peak Prediction Viewer</h1>
+  <div id="output"></div>
+
+  <script>
+    const endpoints = [
+      { label: "ERCOT 4CP", path: "ercot_4cp" },
+      { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
+      { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
+      { label: "PJM PPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PPL" },
+      { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
+      { label: "PJM PSEG", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PSEG" },
+      { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
+    ];
+
+    const output = document.getElementById('output');
+
+    function createTable(data, metadata) {
+      const table = document.createElement('table');
+      const headerRow = document.createElement('tr');
+      ['Date', 'Peak Hour', 'Peak Load (GW)', 'Probability'].forEach(col => {
+        const th = document.createElement('th');
+        th.textContent = col;
+        headerRow.appendChild(th);
+      });
+      table.appendChild(headerRow);
+
+      data.forEach(item => {
+        const row = document.createElement('tr');
+        const { date, peak_hour, peak_load, prob } = item;
+        [date, peak_hour, peak_load.toFixed(2), prob].forEach(value => {
+          const td = document.createElement('td');
+          td.textContent = value;
+          row.appendChild(td);
+        });
+        table.appendChild(row);
+      });
+
+      const elements = [table];
+      if (metadata?.prediction_timestamp) {
+        const note = document.createElement('div');
+        note.className = "note";
+        note.textContent = `Last updated: ${metadata.prediction_timestamp}`;
+        elements.push(note);
+      }
+
+      return elements;
+    }
+
+    async function loadPredictions() {
+      for (const { label, path, zoneId } of endpoints) {
+        const zoneDiv = document.createElement('div');
+        zoneDiv.className = "zone";
+        zoneDiv.innerHTML = `<h2>${label}</h2>`;
+
+        let url = `https://your-backend-url.com/api/predictions/${path}`;
+        if (zoneId) url += `?zoneId=${zoneId}`;
+
+        try {
+          const res = await fetch(url);
+          if (!res.ok) throw new Error("Failed to load");
+          const { data, metadata } = await res.json();
+
+          const elements = createTable(data, metadata);
+          elements.forEach(el => zoneDiv.appendChild(el));
+        } catch (e) {
+          const error = document.createElement('div');
+          error.className = 'error';
+          error.textContent = 'Error loading data';
+          zoneDiv.appendChild(error);
+        }
+
+        output.appendChild(zoneDiv);
+      }
+    }
+
+    loadPredictions();
+  </script>
+</body>
+</html>
