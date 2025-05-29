@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <title>Amperon Predictions</title>
   <style id="theme-style">
-    /* Default: Terminal Dark Green */
+    /* Default: Terminal Green Theme */
     body {
       background-color: #000;
       color: #33ff66;
@@ -12,10 +12,10 @@
       padding: 2rem;
       font-size: 1.1rem;
       line-height: 1.6;
+      text-align: center;
     }
 
     h1, h2 {
-      text-align: center;
       color: #33ff66;
       margin-bottom: 1rem;
       letter-spacing: 0.05em;
@@ -26,17 +26,16 @@
     }
 
     table {
-      width: 100%;
+      margin: 1rem auto;
+      width: 90%;
       border-collapse: collapse;
-      margin-top: 1rem;
       font-size: 1rem;
+      text-align: center;
     }
 
     th, td {
       border: 1px solid #007744;
       padding: 0.75rem;
-      text-align: center;
-      color: #33ff66;
     }
 
     th {
@@ -54,6 +53,7 @@
       margin-top: 0.75rem;
       color: #88ffbb;
       text-align: right;
+      margin-right: 5%;
     }
 
     .error {
@@ -69,20 +69,15 @@
       text-shadow: 0 0 4px #ff0000;
     }
 
-    #theme-toggle {
+    select {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1rem;
+      padding: 0.25rem 0.5rem;
       margin: 1rem auto 2rem;
       display: block;
-      padding: 0.5rem 1rem;
-      font-size: 1rem;
-      font-family: 'Courier New', Courier, monospace;
-      background-color: transparent;
-      border: 2px solid #33ff66;
+      background-color: #000;
       color: #33ff66;
-      cursor: pointer;
-    }
-
-    #theme-toggle:hover {
-      background-color: #003300;
+      border: 1px solid #33ff66;
     }
   </style>
 </head>
@@ -90,7 +85,14 @@
   <h1>AMPERON PEAK PREDICTION VIEWER</h1>
   <h2>7 DAY ROLLING FORECAST</h2>
 
-  <button id="theme-toggle">Toggle Theme</button>
+  <label for="theme-select">
+    <select id="theme-select">
+      <option value="0">Terminal Green</option>
+      <option value="1">Light Theme</option>
+      <option value="2">Modern Dark</option>
+    </select>
+  </label>
+
   <div id="output"></div>
 
   <script>
@@ -105,45 +107,44 @@
     ];
 
     const themes = [
-      `/* Terminal Dark Green */
-      body { background: #000; color: #33ff66; font-family: 'Courier New', Courier, monospace; }
-      h1, h2 { color: #33ff66; text-align: center; }
-      th, td { color: #33ff66; border: 1px solid #007744; }
-      th { background: #002b14; color: #66ff99; }
-      tr:nth-child(even) { background: #001a0d; }
-      .note { color: #88ffbb; }
-      .error { color: #ff6666; }
-      .high-prob { background: #800000 !important; color: #ffffff !important; font-weight: bold; text-shadow: 0 0 4px #ff0000; }
-      #theme-toggle { border: 2px solid #33ff66; color: #33ff66; background: transparent; }`,
+      `body{background:#000;color:#33ff66;font-family:'Courier New',Courier,monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
+       h1,h2{color:#33ff66;text-align:center;}
+       table{margin:1rem auto;width:90%;border-collapse:collapse;font-size:1rem;text-align:center;}
+       th,td{border:1px solid #007744;padding:0.75rem;}
+       th{background:#002b14;color:#66ff99;}
+       tr:nth-child(even){background:#001a0d;}
+       .note{text-align:right;margin-top:0.75rem;color:#88ffbb;margin-right:5%;}
+       .error{color:#ff6666;}
+       .high-prob{background:#800000 !important;color:#fff !important;font-weight:bold;text-shadow:0 0 4px #f00;}
+       select{background:#000;color:#33ff66;border:1px solid #33ff66;font-family:'Courier New',monospace;}`,
 
-      `/* Light Cream Theme */
-      body { background: #fdf6e3; color: #111; font-family: 'Courier New', Courier, monospace; }
-      h1, h2 { color: #111; }
-      th, td { color: #111; border: 1px solid #aaa; }
-      th { background: #eee; }
-      tr:nth-child(even) { background: #f0f0f0; }
-      .note { color: #333; }
-      .error { color: red; }
-      .high-prob { background: #ffcccc !important; color: #900 !important; font-weight: bold; }
-      #theme-toggle { border: 2px solid #111; color: #111; background: transparent; }`,
+      `body{background:#fdf6e3;color:#111;font-family:'Courier New',Courier,monospace;padding:2rem;text-align:center;}
+       h1,h2{color:#111;}
+       table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
+       th,td{border:1px solid #aaa;padding:0.75rem;}
+       th{background:#eee;}
+       tr:nth-child(even){background:#f0f0f0;}
+       .note{text-align:right;color:#333;margin-right:5%;}
+       .error{color:red;}
+       .high-prob{background:#ffcccc !important;color:#900 !important;font-weight:bold;}
+       select{background:#fff;color:#111;border:1px solid #111;font-family:'Courier New',monospace;}`,
 
-      `/* Modern Dark Neon */
-      body { background: #111; color: #39ff14; font-family: 'Courier New', Courier, monospace; }
-      h1, h2 { color: #39ff14; }
-      th, td { color: #39ff14; border: 1px solid #39ff14; }
-      th { background: #1a1a1a; color: #90ee90; }
-      tr:nth-child(even) { background: #0a0a0a; }
-      .note { color: #90ee90; }
-      .error { color: #ff3333; }
-      .high-prob { background: #ff0033 !important; color: #ffffff !important; font-weight: bold; }
-      #theme-toggle { border: 2px solid #39ff14; color: #39ff14; background: transparent; }`
+      `body{background:#111;color:#39ff14;font-family:'Courier New',Courier,monospace;padding:2rem;text-align:center;}
+       h1,h2{color:#39ff14;}
+       table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
+       th,td{border:1px solid #39ff14;padding:0.75rem;}
+       th{background:#1a1a1a;color:#90ee90;}
+       tr:nth-child(even){background:#0a0a0a;}
+       .note{text-align:right;color:#90ee90;margin-right:5%;}
+       .error{color:#ff3333;}
+       .high-prob{background:#ff0033 !important;color:#fff !important;font-weight:bold;}
+       select{background:#111;color:#39ff14;border:1px solid #39ff14;font-family:'Courier New',monospace;}`
     ];
 
-    let currentTheme = 0;
     const styleTag = document.getElementById('theme-style');
-    document.getElementById('theme-toggle').addEventListener('click', () => {
-      currentTheme = (currentTheme + 1) % themes.length;
-      styleTag.innerHTML = themes[currentTheme];
+    document.getElementById('theme-select').addEventListener('change', (e) => {
+      const selectedThemeIndex = parseInt(e.target.value, 10);
+      styleTag.innerHTML = themes[selectedThemeIndex];
     });
 
     const output = document.getElementById('output');
@@ -167,7 +168,7 @@
           td.textContent = value;
           row.appendChild(td);
         });
-        if (prob > 0.9) row.classList.add('high-prob');
+        if (prob > 90) row.classList.add('high-prob');
         table.appendChild(row);
       });
 
