@@ -33,6 +33,11 @@
     #output {
       display: none;
     }
+
+    /* Initially hide the theme dropdown */
+    #theme-container {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -40,12 +45,14 @@
   <h2>7 DAY ROLLING FORECAST</h2>
 
   <!-- Spinner shown while loading -->
-  <div id="loading"><div class="spinner"></div></div>
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
 
   <div id="output"></div>
 
-  <!-- Theme dropdown at bottom -->
-  <label for="theme-select">
+  <!-- Theme dropdown at bottom (wrapped in a container that starts hidden) -->
+  <label id="theme-container" for="theme-select">
     <select id="theme-select">
       <option value="1">Ultra-Minimal</option>
       <option value="0">Terminal Green</option>
@@ -54,21 +61,19 @@
   </label>
 
   <script>
-  const endpoints = [
-  { label: "ERCOT 4CP", path: "ercot_4cp" },
-  { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
-
-  // PJM zones in alphabetical order
-  { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
-  { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
-  { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
-  { label: "PJM COMED", path: "pjm_5cp_nits", zoneId: "PJM_LZ_COMED" },
-  { label: "PJM DPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_DPL" },
-  { label: "PJM PECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PECO" },
-  { label: "PJM PPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PPL" },
-  { label: "PJM PSEG", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PSEG" }
-];
-
+    const endpoints = [
+      { label: "ERCOT 4CP", path: "ercot_4cp" },
+      { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
+      // PJM zones in alphabetical order
+      { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
+      { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
+      { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
+      { label: "PJM COMED", path: "pjm_5cp_nits", zoneId: "PJM_LZ_COMED" },
+      { label: "PJM DPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_DPL" },
+      { label: "PJM PECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PECO" },
+      { label: "PJM PPL", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PPL" },
+      { label: "PJM PSEG", path: "pjm_5cp_nits", zoneId: "PJM_LZ_PSEG" }
+    ];
 
     const themes = [
       `body{background:#000;color:#33ff66;font-family:'Courier New',Courier,monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
@@ -107,12 +112,14 @@
 
     const styleTag = document.getElementById('theme-style');
     const themeSelect = document.getElementById('theme-select');
+    const themeContainer = document.getElementById('theme-container');
     const loading = document.getElementById('loading');
     const output = document.getElementById('output');
 
+    // Load persisted theme (default to index 1)
     const savedThemeIndex = localStorage.getItem('selectedTheme') || "1";
     themeSelect.value = savedThemeIndex;
-    styleTag.innerHTML = themes[parseInt(savedThemeIndex)];
+    styleTag.innerHTML = themes[parseInt(savedThemeIndex, 10)];
 
     themeSelect.addEventListener('change', (e) => {
       const selected = parseInt(e.target.value, 10);
@@ -181,8 +188,13 @@
       });
 
       await Promise.all(requests);
+
+      // Hide spinner, show data
       loading.style.display = 'none';
       output.style.display = 'block';
+
+      // Reveal the theme-selector now that loading is done
+      themeContainer.style.display = 'block';
     }
 
     loadPredictions();
