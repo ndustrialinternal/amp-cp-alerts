@@ -156,7 +156,7 @@
     const loading = document.getElementById('loading');
     const output = document.getElementById('output');
 
-    // Store index but defer injecting until after data renders
+    // Only remember index; do NOT inject CSS until after data renders
     const savedThemeIndex = localStorage.getItem('selectedTheme') || "1";
     themeSelect.value = savedThemeIndex;
 
@@ -166,6 +166,7 @@
       localStorage.setItem('selectedTheme', idx);
     });
 
+    // Build a single HTML string for table + note (converting UTC to local)
     function buildTableHtml(data, metadata) {
       let html = '<table><tr>' +
                  ['Date','Peak Hour (Start, ISO Local Time)','Peak Load (GW)','Probability of Program Peak']
@@ -189,7 +190,10 @@
       html += '</table>';
 
       if (metadata?.prediction_timestamp) {
-        html += `<div class="note">Last updated: ${metadata.prediction_timestamp}</div>`;
+        // Convert UTC string to browser-local time with time zone
+        const dt = new Date(metadata.prediction_timestamp);
+        const localString = dt.toLocaleString(undefined, { timeZoneName: 'short' });
+        html += `<div class="note">Last updated: ${localString}</div>`;
       }
       return html;
     }
@@ -218,7 +222,7 @@
 
       await Promise.all(fetchPromises);
 
-      // One‐time DOM update
+      // Single DOM update once all data is ready
       loading.style.display = 'none';
       output.appendChild(fragment);
       output.style.display = 'block';
