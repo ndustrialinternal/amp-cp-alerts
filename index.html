@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Amperon Predictions</title>
   <style id="theme-style">
-    /* Theme styles will be injected dynamically */
+    /* We’ll inject the saved theme only after data is visible */
   </style>
   <style>
-    /* Spinner styles (independent of theme) */
+    /* Spinner & layout */
     #loading {
       display: flex;
       justify-content: center;
@@ -15,7 +15,6 @@
       height: 100px;
       margin-top: 2rem;
     }
-
     .spinner {
       width: 40px;
       height: 40px;
@@ -24,19 +23,60 @@
       border-radius: 50%;
       animation: spin 0.8s linear infinite;
     }
-
     @keyframes spin {
       0%   { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
     #output {
       display: none;
     }
-
-    /* Initially hide the theme dropdown */
     #theme-container {
       display: none;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    /* Table styling */
+    table {
+      margin: 1rem auto;
+      width: 90%;
+      border-collapse: collapse;
+      text-align: center;
+      font-size: 0.95rem;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 0.75rem;
+    }
+    th {
+      background: #f5f5f5;
+      color: #111;
+      font-weight: bold;
+    }
+    tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    .note {
+      text-align: right;
+      color: #555;
+      margin-right: 5%;
+      font-style: italic;
+    }
+    .error {
+      color: #b00020;
+      margin: 1rem 0;
+    }
+
+    /* Highlight classes */
+    .mid-prob {
+      background: #fff8b3 !important; /* light yellow */
+      color: #333 !important;
+      font-weight: bold;
+    }
+    .high-prob {
+      background: #ffe0e0 !important; /* light red */
+      color: #a00000 !important;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -44,27 +84,24 @@
   <h1>AMPERON PEAK PREDICTION VIEWER</h1>
   <h2>7 DAY ROLLING FORECAST</h2>
 
-  <!-- Spinner shown while loading -->
   <div id="loading">
     <div class="spinner"></div>
   </div>
 
   <div id="output"></div>
 
-  <!-- Theme dropdown at bottom (wrapped in a container that starts hidden) -->
-  <label id="theme-container" for="theme-select">
+  <div id="theme-container">
     <select id="theme-select">
       <option value="1">Ultra-Minimal</option>
       <option value="0">Terminal Green</option>
       <option value="2">Modern Dark</option>
     </select>
-  </label>
+  </div>
 
   <script>
     const endpoints = [
       { label: "ERCOT 4CP", path: "ercot_4cp" },
       { label: "PJM 5CP PLC", path: "pjm_5cp_plc" },
-      // PJM zones in alphabetical order
       { label: "PJM AECO", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AECO" },
       { label: "PJM AEP", path: "pjm_5cp_nits", zoneId: "PJM_LZ_AEP" },
       { label: "PJM BGE", path: "pjm_5cp_nits", zoneId: "PJM_LZ_BGE" },
@@ -76,7 +113,7 @@
     ];
 
     const themes = [
-      `body{background:#000;color:#33ff66;font-family:'Courier New',Courier,monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
+      `body{background:#000;color:#33ff66;font-family:'Courier New',monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
        h1,h2{color:#33ff66;}
        table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
        th,td{border:1px solid #007744;padding:0.75rem;}
@@ -85,9 +122,10 @@
        .note{text-align:right;margin-top:0.75rem;color:#88ffbb;margin-right:5%;}
        .error{color:#ff6666;}
        .high-prob{background:#800000 !important;color:#fff !important;font-weight:bold;text-shadow:0 0 4px #f00;}
+       .mid-prob{background:#444400 !important;color:#fff !important;font-weight:bold;}
        select{background:#000;color:#33ff66;border:1px solid #33ff66;font-family:'Courier New',monospace;margin-top:2rem;}`,
 
-      `body{background:#ffffff;color:#222;font-family:sans-serif;padding:2rem;text-align:center;}
+      `body{background:#fff;color:#222;font-family:sans-serif;padding:2rem;text-align:center;}
        h1,h2{color:#111;font-weight:600;}
        table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;font-size:0.95rem;}
        th,td{border:1px solid #ccc;padding:0.75rem;}
@@ -96,9 +134,10 @@
        .note{text-align:right;color:#555;margin-right:5%;font-style:italic;}
        .error{color:#b00020;}
        .high-prob{background:#ffe0e0 !important;color:#a00000 !important;font-weight:bold;}
+       .mid-prob{background:#fff8b3 !important;color:#333 !important;font-weight:bold;}
        select{background:#fff;color:#111;border:1px solid #ccc;font-family:sans-serif;margin-top:2rem;}`,
 
-      `body{background:#121212;color:#a0f0a0;font-family:'Courier New',Courier,monospace;padding:2rem;text-align:center;}
+      `body{background:#121212;color:#a0f0a0;font-family:'Courier New',monospace;padding:2rem;text-align:center;}
        h1,h2{color:#a0f0a0;}
        table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
        th,td{border:1px solid #66aa66;padding:0.75rem;}
@@ -107,6 +146,7 @@
        .note{text-align:right;color:#88cc88;margin-right:5%;}
        .error{color:#ff5f5f;}
        .high-prob{background:#aa2e2e !important;color:#fff !important;font-weight:bold;}
+       .mid-prob{background:#666600 !important;color:#fff !important;font-weight:bold;}
        select{background:#222;color:#a0f0a0;border:1px solid #66aa66;font-family:'Courier New',monospace;margin-top:2rem;}`
     ];
 
@@ -116,84 +156,75 @@
     const loading = document.getElementById('loading');
     const output = document.getElementById('output');
 
-    // Load persisted theme (default to index 1)
+    // Store index but defer injecting until after data renders
     const savedThemeIndex = localStorage.getItem('selectedTheme') || "1";
     themeSelect.value = savedThemeIndex;
-    styleTag.innerHTML = themes[parseInt(savedThemeIndex, 10)];
 
-    themeSelect.addEventListener('change', (e) => {
-      const selected = parseInt(e.target.value, 10);
-      styleTag.innerHTML = themes[selected];
-      localStorage.setItem('selectedTheme', selected);
+    themeSelect.addEventListener('change', e => {
+      const idx = parseInt(e.target.value, 10);
+      styleTag.innerHTML = themes[idx];
+      localStorage.setItem('selectedTheme', idx);
     });
 
-    function createTable(data, metadata) {
-      const table = document.createElement('table');
-      const headerRow = document.createElement('tr');
-      const headers = ['Date', 'Peak Hour (Start, ISO Local Time)', 'Peak Load (GW)', 'Probability of Program Peak'];
-      headers.forEach(col => {
-        const th = document.createElement('th');
-        th.textContent = col;
-        headerRow.appendChild(th);
-      });
-      table.appendChild(headerRow);
+    function buildTableHtml(data, metadata) {
+      let html = '<table><tr>' +
+                 ['Date','Peak Hour (Start, ISO Local Time)','Peak Load (GW)','Probability of Program Peak']
+                   .map(h => `<th>${h}</th>`).join('') +
+                 '</tr>';
 
-      data.forEach(item => {
-        const row = document.createElement('tr');
-        const { date, peak_hour, peak_load, prob } = item;
-        [date, peak_hour, peak_load.toFixed(2), prob].forEach(value => {
-          const td = document.createElement('td');
-          td.textContent = value;
-          row.appendChild(td);
-        });
-        if (prob > 90) row.classList.add('high-prob');
-        table.appendChild(row);
-      });
-
-      const elements = [table];
-      if (metadata?.prediction_timestamp) {
-        const note = document.createElement('div');
-        note.className = "note";
-        note.textContent = `Last updated: ${metadata.prediction_timestamp}`;
-        elements.push(note);
+      for (const { date, peak_hour, peak_load, prob } of data) {
+        let cls = '';
+        if (prob > 90) {
+          cls = ' class="high-prob"';
+        } else if (prob >= 50) {
+          cls = ' class="mid-prob"';
+        }
+        html += `<tr${cls}>
+                   <td>${date}</td>
+                   <td>${peak_hour}</td>
+                   <td>${peak_load.toFixed(2)}</td>
+                   <td>${prob}</td>
+                 </tr>`;
       }
+      html += '</table>';
 
-      return elements;
+      if (metadata?.prediction_timestamp) {
+        html += `<div class="note">Last updated: ${metadata.prediction_timestamp}</div>`;
+      }
+      return html;
     }
 
     async function loadPredictions() {
-      const requests = endpoints.map(async ({ label, path, zoneId }) => {
-        const zoneDiv = document.createElement('div');
-        zoneDiv.className = "zone";
-        zoneDiv.innerHTML = `<h2>${label}</h2>`;
+      const fragment = document.createDocumentFragment();
+      const fetchPromises = endpoints.map(async ({ label, path, zoneId }) => {
+        const container = document.createElement('div');
+        container.className = 'zone';
+        container.innerHTML = `<h2>${label}</h2>`;
 
         let url = `https://cp-backend-4ntg.onrender.com/api/predictions/${path}`;
         if (zoneId) url += `?zoneId=${zoneId}`;
 
         try {
           const res = await fetch(url);
-          if (!res.ok) throw new Error("Failed to load");
+          if (!res.ok) throw new Error();
           const { data, metadata } = await res.json();
-
-          const elements = createTable(data, metadata);
-          elements.forEach(el => zoneDiv.appendChild(el));
-        } catch (e) {
-          const error = document.createElement('div');
-          error.className = 'error';
-          error.textContent = 'Error loading data';
-          zoneDiv.appendChild(error);
+          container.innerHTML += buildTableHtml(data, metadata);
+        } catch {
+          container.innerHTML += `<div class="error">Error loading data</div>`;
         }
 
-        output.appendChild(zoneDiv);
+        fragment.appendChild(container);
       });
 
-      await Promise.all(requests);
+      await Promise.all(fetchPromises);
 
-      // Hide spinner, show data
+      // One‐time DOM update
       loading.style.display = 'none';
+      output.appendChild(fragment);
       output.style.display = 'block';
 
-      // Reveal the theme-selector now that loading is done
+      // Now apply saved theme and show selector
+      styleTag.innerHTML = themes[parseInt(savedThemeIndex, 10)];
       themeContainer.style.display = 'block';
     }
 
