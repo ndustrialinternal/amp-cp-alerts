@@ -36,7 +36,7 @@
       margin: 2rem 0;
     }
 
-    /* Table styling */
+    /* Base table styling (light-theme default) */
     table {
       margin: 1rem auto;
       width: 90%;
@@ -53,9 +53,12 @@
       color: #111;
       font-weight: bold;
     }
+    /* Default light‐theme row colors: white / light gray */
     tr:nth-child(even) {
       background: #f9f9f9;
     }
+    /* odd rows inherit white by default */
+
     .note {
       text-align: right;
       color: #555;
@@ -67,7 +70,7 @@
       margin: 1rem 0;
     }
 
-    /* Highlight classes */
+    /* Highlight classes (these stay the same) */
     .mid-prob {
       background: #fff8b3 !important; /* light yellow */
       color: #333 !important;
@@ -83,7 +86,7 @@
 <body>
   <h1>AMPERON PEAK PREDICTION VIEWER</h1>
   <h2>7 DAY ROLLING FORECAST</h2>
- <button
+  <button
     id="alerts-button"
     onclick="window.location.href='https://ndustrialinternal.github.io/cp-peaks/';">
     Open Current Peaks
@@ -91,12 +94,12 @@
   <div id="loading">
     <div class="spinner"></div>
   </div>
- 
+
   <div id="output"></div>
 
   <div id="theme-container">
     <select id="theme-select">
-      <option value="1">Ultra-Minimal</option>
+      <option value="1">Ultra-Minimal (Light)</option>
       <option value="0">Terminal Green</option>
       <option value="2">Modern Dark</option>
     </select>
@@ -144,12 +147,12 @@
          background: #002b14;
          color: #66ff99;
        }
-       /* Odd rows match page background; even rows are slightly lighter */
+       /* Override base CSS so rows never go white in terminal theme */
        tr:nth-child(odd) {
-         background: #000;
+         background: #000 !important;
        }
        tr:nth-child(even) {
-         background: #001a0d;
+         background: #001a0d !important;
        }
        .note {
          text-align: right;
@@ -207,8 +210,12 @@
          color: #111;
          font-weight: bold;
        }
+       /* Light theme uses the base CSS for alternating rows */
        tr:nth-child(even) {
          background: #f9f9f9;
+       }
+       tr:nth-child(odd) {
+         background: #fff !important;
        }
        .note {
          text-align: right;
@@ -262,12 +269,12 @@
          background: #1e1e1e;
          color: #bfffbf;
        }
-       /* Odd rows match page background; even rows are slightly lighter */
+       /* Override base CSS so rows never go white in modern dark */
        tr:nth-child(odd) {
-         background: #121212;
+         background: #121212 !important;
        }
        tr:nth-child(even) {
-         background: #181818;
+         background: #181818 !important;
        }
        .note {
          text-align: right;
