@@ -86,14 +86,15 @@
 <body>
   <h1>AMPERON PEAK PREDICTION VIEWER</h1>
   <h2>7 DAY ROLLING FORECAST</h2>
+
+  <div id="loading">
+    <div class="spinner"></div>
+  </div>
   <button
     id="alerts-button"
     onclick="window.location.href='https://ndustrialinternal.github.io/cp-peaks/';">
     Open Current Peaks
   </button>
-  <div id="loading">
-    <div class="spinner"></div>
-  </div>
 
   <div id="output"></div>
 
@@ -144,8 +145,8 @@
          padding: 0.75rem;
        }
        th {
-         background: #002b14;
-         color: #66ff99;
+         background: #002b14 !important;
+         color: #66ff99 !important;
        }
        /* Override base CSS so rows never go white in terminal theme */
        tr:nth-child(odd) {
@@ -206,9 +207,8 @@
          padding: 0.75rem;
        }
        th {
-         background: #f5f5f5;
-         color: #111;
-         font-weight: bold;
+         background: #f5f5f5 !important;
+         color: #111 !important;
        }
        /* Light theme uses the base CSS for alternating rows */
        tr:nth-child(even) {
@@ -266,8 +266,8 @@
          padding: 0.75rem;
        }
        th {
-         background: #1e1e1e;
-         color: #bfffbf;
+         background: #1e1e1e !important;
+         color: #bfffbf !important;
        }
        /* Override base CSS so rows never go white in modern dark */
        tr:nth-child(odd) {
