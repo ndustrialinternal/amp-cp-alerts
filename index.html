@@ -118,43 +118,183 @@
     ];
 
     const themes = [
-      `body{background:#000;color:#33ff66;font-family:'Courier New',monospace;padding:2rem;font-size:1.1rem;line-height:1.6;text-align:center;}
-       h1,h2{color:#33ff66;}
-       table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
-       th,td{border:1px solid #007744;padding:0.75rem;}
-       th{background:#002b14;color:#66ff99;}
-       tr:nth-child(even){background:#001a0d;}
-       .note{text-align:right;margin-top:0.75rem;color:#88ffbb;margin-right:5%;}
-       .error{color:#ff6666;}
-       .high-prob{background:#800000 !important;color:#fff !important;font-weight:bold;text-shadow:0 0 4px #f00;}
-       .mid-prob{background:#444400 !important;color:#fff !important;font-weight:bold;}
-       select{background:#000;color:#33ff66;border:1px solid #33ff66;font-family:'Courier New',monospace;margin-top:2rem;}`,
+      /* 0 = Terminal Green */
+      `body {
+         background: #000;
+         color: #33ff66;
+         font-family: 'Courier New', monospace;
+         padding: 2rem;
+         font-size: 1.1rem;
+         line-height: 1.6;
+         text-align: center;
+       }
+       h1, h2 {
+         color: #33ff66;
+       }
+       table {
+         margin: 1rem auto;
+         width: 90%;
+         border-collapse: collapse;
+         text-align: center;
+       }
+       th, td {
+         border: 1px solid #007744;
+         padding: 0.75rem;
+       }
+       th {
+         background: #002b14;
+         color: #66ff99;
+       }
+       /* Odd rows match page background; even rows are slightly lighter */
+       tr:nth-child(odd) {
+         background: #000;
+       }
+       tr:nth-child(even) {
+         background: #001a0d;
+       }
+       .note {
+         text-align: right;
+         margin-top: 0.75rem;
+         color: #88ffbb;
+         margin-right: 5%;
+       }
+       .error {
+         color: #ff6666;
+       }
+       .high-prob {
+         background: #800000 !important;
+         color: #fff !important;
+         font-weight: bold;
+         text-shadow: 0 0 4px #f00;
+       }
+       .mid-prob {
+         background: #444400 !important;
+         color: #fff !important;
+         font-weight: bold;
+       }
+       select {
+         background: #000;
+         color: #33ff66;
+         border: 1px solid #33ff66;
+         font-family: 'Courier New', monospace;
+         margin-top: 2rem;
+       }`,
 
-      `body{background:#fff;color:#222;font-family:sans-serif;padding:2rem;text-align:center;}
-       h1,h2{color:#111;font-weight:600;}
-       table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;font-size:0.95rem;}
-       th,td{border:1px solid #ccc;padding:0.75rem;}
-       th{background:#f5f5f5;color:#111;font-weight:bold;}
-       tr:nth-child(even){background:#f9f9f9;}
-       tr:nth-child(odd){background:#f9f9f9;}
-       .note{text-align:right;color:#555;margin-right:5%;font-style:italic;}
-       .error{color:#b00020;}
-       .high-prob{background:#ffe0e0 !important;color:#a00000 !important;font-weight:bold;}
-       .mid-prob{background:#fff8b3 !important;color:#333 !important;font-weight:bold;}
-       select{background:#fff;color:#111;border:1px solid #ccc;font-family:sans-serif;margin-top:2rem;}`,
+      /* 1 = Ultra-Minimal (light theme) */
+      `body {
+         background: #fff;
+         color: #222;
+         font-family: sans-serif;
+         padding: 2rem;
+         text-align: center;
+       }
+       h1, h2 {
+         color: #111;
+         font-weight: 600;
+       }
+       table {
+         margin: 1rem auto;
+         width: 90%;
+         border-collapse: collapse;
+         text-align: center;
+         font-size: 0.95rem;
+       }
+       th, td {
+         border: 1px solid #ccc;
+         padding: 0.75rem;
+       }
+       th {
+         background: #f5f5f5;
+         color: #111;
+         font-weight: bold;
+       }
+       tr:nth-child(even) {
+         background: #f9f9f9;
+       }
+       .note {
+         text-align: right;
+         color: #555;
+         margin-right: 5%;
+         font-style: italic;
+       }
+       .error {
+         color: #b00020;
+       }
+       .high-prob {
+         background: #ffe0e0 !important;
+         color: #a00000 !important;
+         font-weight: bold;
+       }
+       .mid-prob {
+         background: #fff8b3 !important;
+         color: #333 !important;
+         font-weight: bold;
+       }
+       select {
+         background: #fff;
+         color: #111;
+         border: 1px solid #ccc;
+         font-family: sans-serif;
+         margin-top: 2rem;
+       }`,
 
-      `body{background:#121212;color:#a0f0a0;font-family:'Courier New',monospace;padding:2rem;text-align:center;}
-       h1,h2{color:#a0f0a0;}
-       table{margin:1rem auto;width:90%;border-collapse:collapse;text-align:center;}
-       th,td{border:1px solid #66aa66;padding:0.75rem;}
-       th{background:#1e1e1e;color:#bfffbf;}
-       tr:nth-child(even){background:#181818;}
-       tr:nth-child(odd){background:#181818;}
-       .note{text-align:right;color:#88cc88;margin-right:5%;}
-       .error{color:#ff5f5f;}
-       .high-prob{background:#aa2e2e !important;color:#fff !important;font-weight:bold;}
-       .mid-prob{background:#666600 !important;color:#fff !important;font-weight:bold;}
-       select{background:#222;color:#a0f0a0;border:1px solid #66aa66;font-family:'Courier New',monospace;margin-top:2rem;}`
+      /* 2 = Modern Dark */
+      `body {
+         background: #121212;
+         color: #a0f0a0;
+         font-family: 'Courier New', monospace;
+         padding: 2rem;
+         text-align: center;
+       }
+       h1, h2 {
+         color: #a0f0a0;
+       }
+       table {
+         margin: 1rem auto;
+         width: 90%;
+         border-collapse: collapse;
+         text-align: center;
+       }
+       th, td {
+         border: 1px solid #66aa66;
+         padding: 0.75rem;
+       }
+       th {
+         background: #1e1e1e;
+         color: #bfffbf;
+       }
+       /* Odd rows match page background; even rows are slightly lighter */
+       tr:nth-child(odd) {
+         background: #121212;
+       }
+       tr:nth-child(even) {
+         background: #181818;
+       }
+       .note {
+         text-align: right;
+         color: #88cc88;
+         margin-right: 5%;
+       }
+       .error {
+         color: #ff5f5f;
+       }
+       .high-prob {
+         background: #aa2e2e !important;
+         color: #fff !important;
+         font-weight: bold;
+       }
+       .mid-prob {
+         background: #666600 !important;
+         color: #fff !important;
+         font-weight: bold;
+       }
+       select {
+         background: #222;
+         color: #a0f0a0;
+         border: 1px solid #66aa66;
+         font-family: 'Courier New', monospace;
+         margin-top: 2rem;
+       }`
     ];
 
     const styleTag = document.getElementById('theme-style');
