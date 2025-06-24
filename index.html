@@ -322,7 +322,7 @@
     // Build a single HTML string for table + note (parsing UTC+0 correctly)
     function buildTableHtml(data, metadata) {
       let html = '<table><tr>' +
-                 ['Date','Peak Hour (Start, ISO Local Time)','Peak Load (GW)','Probability of Program Peak']
+                 ['Date','Peak Hour (Hour End, ISO Local Time)','Peak Load (GW)','Probability of Program Peak']
                    .map(h => `<th>${h}</th>`).join('') +
                  '</tr>';
 
